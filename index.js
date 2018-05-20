@@ -15,7 +15,9 @@ const INITIAL_UPDATE_ID = 'initial'
 const app = new Koa()
 module.exports.handler = serverless(app)
 const ddbService = new AWS.DynamoDB({
-  apiVersion: '2012-08-10'
+  apiVersion: '2012-08-10',
+  region: 'eu-west-1',
+  output: 'json'
 })
 const ddb = new AWS.DynamoDB.DocumentClient({
   service: ddbService
@@ -33,6 +35,7 @@ router.post('/match', body(), async (ctx, next) => {
   const matchId = uuidv1()
   await updateMatch(matchId, ctx.request.body)
   ctx.status = 200
+  ctx.body = {id: matchId}
   return next()
 })
 router.get('/match/last', async (ctx, next) => {
@@ -40,20 +43,31 @@ router.get('/match/last', async (ctx, next) => {
   ctx.response.body = match
   return next()
 })
+router.patch('/match/last', body(), async (ctx, next) => {
+  const {id: matchId} = await getLastMatch()
+  const matchData = ctx.request.body
+  await updateMatch(matchId, matchData)
+  ctx.status = 200
+  ctx.body = {}
+  return next()
+})
 // router.get('/match/:matchId', getMatchRequest)
 router.patch('/match/:matchId', body(), async (ctx, next) => {
   const matchId = ctx.params.matchId
   const matchData = ctx.request.body
-  ctx.status = 200
   await updateMatch(matchId, matchData)
+  ctx.status = 200
+  return next()
 })
 
-app.user(router.routes())
+app.use(router.routes())
 app.use(router.allowedMethods({
   throw: true,
   notImplemented: () => Boom.notImplemented(),
   methodNotAllowed: () => Boom.methodNotAllowed()
 }))
+
+if (!module.parent) app.listen(1337)
 
 async function listAllMatches () {
   try {
@@ -130,6 +144,7 @@ async function getLastMatch () {
   try {
     const {Items: matches} = await listAllMatches()
     matches.sort((lhs, rhs) => rhs.timestamp - lhs.timestamp)
+    console.log(matches[0])
     return matches[0]
   } catch (ex) {
     console.error(`ERROR in 'getLastMatchId': `, ex)

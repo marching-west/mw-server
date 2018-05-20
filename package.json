@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild": "mkdir -p dist",
+    "build": "rm -f dist/index.zip && zip -r dist/index.zip index.js node_modules",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -11,6 +13,7 @@
     "url": "git+https://github.com/marching-west/mw-server.git"
   },
   "author": "",
+  "private": true,
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/marching-west/mw-server/issues"
@@ -25,5 +28,6 @@
     "koa-router": "^7.4.0",
     "serverless-http": "^1.5.5",
     "uuid": "^3.2.1"
-  }
+  },
+  "devDependencies": {}
 }

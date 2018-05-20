@@ -1,0 +1,29 @@
+{
+  "name": "mw-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marching-west/mw-server.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/marching-west/mw-server/issues"
+  },
+  "homepage": "https://github.com/marching-west/mw-server#readme",
+  "dependencies": {
+    "aws-sdk": "^2.237.1",
+    "boom": "^7.2.0",
+    "dotenv": "^5.0.1",
+    "koa": "^2.5.1",
+    "koa-body": "^2.5.0",
+    "koa-router": "^7.4.0",
+    "serverless-http": "^1.5.5",
+    "uuid": "^3.2.1"
+  }
+}
